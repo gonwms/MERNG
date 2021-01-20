@@ -25,7 +25,7 @@ module.exports = {
     Mutation: {
         async createPost(_, { body }, context) {
             const user = checkAuth(context);
-
+            // New Post llama al models/Post
             const newPost = new Post({
                 body,
                 user: user.id,
@@ -34,7 +34,6 @@ module.exports = {
             });
 
             const post = await newPost.save();
-
             return post;
         },
         async deletePost(_, { postId }, context) {
