@@ -17,12 +17,10 @@ function Register(props) {
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
     update(_, result) {
-      console.log(result);
       props.history.push('/');
-
     },
     onError(err) {
-     // setErrors(err.graphQLErrors[0].extensions.exception.errors);
+      setErrors(err.graphQLErrors[0].extensions.exception.errors);
     },
     variables: values,
   });
@@ -96,7 +94,7 @@ const REGISTER_USER = gql`
     $confirmPassword: String!
   ) {
     register(
-      registerInput: {
+      RegisterInput: {
         username: $username
         email: $email
         password: $password
