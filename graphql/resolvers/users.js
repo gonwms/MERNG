@@ -1,14 +1,14 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const { UserInputError } = require("apollo-server");
+const { UserInputError } = require('apollo-server');
 
-const User = require("../../models/User");
-const { SECRET_KEY } = require("../../config");
+const User = require('../../models/User');
+const { SECRET_KEY } = require('../../config');
 const {
   validateRegisterInput,
   validateLoginInput,
-} = require("../../util/validators");
+} = require('../../util/validators');
 
 function generateToken(user) {
   return jwt.sign(
@@ -18,7 +18,7 @@ function generateToken(user) {
       username: user.username,
     },
     SECRET_KEY,
-    { expiresIn: "1h" }
+    { expiresIn: '1h' }
   );
 }
 
@@ -28,20 +28,20 @@ module.exports = {
       const { errors, valid } = validateLoginInput(username, password);
 
       if (!valid) {
-        throw new UserInputError("Errors", { errors });
+        throw new UserInputError('Errors', { errors });
       }
 
       const user = await User.findOne({ username });
 
       if (!user) {
-        errors.general = "User not found";
-        throw new UserInputError("User not found", { errors });
+        errors.general = 'User not found';
+        throw new UserInputError('User not found', { errors });
       }
 
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
-        errors.general = "Wrong crendetials";
-        throw new UserInputError("Wrong crendetials", { errors });
+        errors.general = 'Wrong crendetials';
+        throw new UserInputError('Wrong crendetials', { errors });
       }
 
       const token = generateToken(user);
@@ -54,7 +54,7 @@ module.exports = {
     },
     async register(
       _,
-      { registerInput: { username, email, password, confirmPassword } }
+      { RegisterInput: { username, email, password, confirmPassword } }
     ) {
       // Validate user data
       const { valid, errors } = validateRegisterInput(
@@ -64,14 +64,14 @@ module.exports = {
         confirmPassword
       );
       if (!valid) {
-        throw new UserInputError("Errors", { errors });
+        throw new UserInputError('Errors', { errors });
       }
       // TODO: Make sure user doesnt already exist
       const user = await User.findOne({ username });
       if (user) {
-        throw new UserInputError("Username is taken", {
+        throw new UserInputError('Username is taken', {
           errors: {
-            username: "This username is taken",
+            username: 'This username is taken',
           },
         });
       }
